@@ -126,3 +126,10 @@ function authorizeRole(role) {
     };
 }
 
+// start server
+app.listen(PORT, () => {
+    console.log(`Backend running at http://localhost${PORT}`);
+    console.log("Try Logging in With: ");
+    console.log("Admin: username: admin, password: admin123");
+    console.log("User: username: alice, password: user123");
+});

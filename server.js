@@ -61,3 +61,13 @@ app.post('api/register', async (req,res) => {
     users.push(newUser);
     res.status(201).json({message: 'user registered' + username, role});
 });
+
+// api/ogin route
+app.post('api/login', async (req,res) => {
+    const {username, password} = req.body;
+
+    const user = users.find(user => user.username === username);
+    if (!user || !await bcrypt.compare(password,user.password)) {
+        return res.status(401).json({error: 'Invalid credentials'});
+    }
+});

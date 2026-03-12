@@ -62,7 +62,7 @@ app.post('api/register', async (req,res) => {
     res.status(201).json({message: 'user registered' + username, role});
 });
 
-// api/ogin route
+// api/ogin route (document this)
 app.post('api/login', async (req,res) => {
     const {username, password} = req.body;
 

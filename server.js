@@ -48,4 +48,16 @@ app.post('api/register', async (req,res) => {
     if (exist){
         return res.status(409).json({error: 'user already exists'});
     }
-})
+
+    // hash user password for every new user
+    const hashed_password = await bcrypt.hash(password,10);
+    const newUser = {
+        id: users.length + 1,
+        username,
+        password:hashed_password,
+        role 
+    };
+    // add user to storage
+    users.push(newUser);
+    res.status(201).json({message: 'user registered' + username, role});
+});

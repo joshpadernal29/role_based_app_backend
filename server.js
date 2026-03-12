@@ -80,3 +80,20 @@ app.post('api/login', async (req, res) => {
 
     res.json({ token, user: { username: user.username, role: user.role } });
 });
+
+
+// protected route : get user profile
+app.get('/api/profile', authenticateToken, (req, res) => {
+    res.json({ user: req.user });
+});
+
+// role-based protected route : Admin 
+app.get('/api/admin/dashboard', authenticateToken, authorizeRole('admin'), (req, res) => {
+    res.json({ message: 'Welcome to the Admin Dashboard!', data: 'secret_admin_info' });
+});
+
+// Public route: Guest Route
+app.get('/api/content/guest', (req, res) => {
+    res.json({ message: 'Public content for all Guests' });
+});
+

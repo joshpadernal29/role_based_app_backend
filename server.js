@@ -12,7 +12,14 @@ const SECRET_KEY = 'verySecretKey';
 
 // enable cors for frontend (change url based on what you want to use) 
 app.use(cors({
-    origin: ['http://127.0.0.1:5000', 'http://localhost:5500']
+    origin: [
+        'http://127.0.0.1:5500',
+        'http://localhost:5500',
+        'http://127.0.0.1:5000',
+        'http://localhost:5000'
+    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'] // Crucial for Part 4 testing
 }));
 
 // middleware to parse json
@@ -20,22 +27,39 @@ app.use(express.json());
 
 // in memory db (replace db later)
 let users = [
-    // pre hashed
-    { id: 1, username: 'admin', password: '$2a$10$...', role: 'admin' },
-    { id: 2, username: 'alice', password: '$2a$10$...', role: 'user' }
+    // pre hashed      
+    {
+        id: 1,
+        username: 'admin',
+        password: 'admin123',
+        role: 'admin',
+        Fname: 'admin',    // Added
+        Lname: '123',     // Added
+        email: 'admin@test.com' // Added
+    },
+    {
+        id: 2,
+        username: 'alice',
+        password: 'user123',
+        role: 'user',
+        Fname: 'Alice',     // Added
+        Lname: 'Smith',     // Added
+        email: 'alice@example.com' // Added
+    }
 ];
 
 
 // pre hashed passwords demo
 if (!users[0].password.includes('$2a$')) {
-    users[0].password = bcrypt.hashSync('admin123', 10);
-    users[1].password = bcrypt.hashSync('user123', 10);
+    // test password hashing
+    users[0].password = bcrypt.hashSync(users[0].password, 10);
+    users[1].password = bcrypt.hashSync(users[1].password, 10);
 }
 
 // Auth routes
 
 // POST/api/register
-app.post('api/register', async (req, res) => {
+app.post('/api/register', async (req, res) => {
     const { username, password, role = 'user' } = req.body;
 
     // check username and password
@@ -63,7 +87,7 @@ app.post('api/register', async (req, res) => {
 });
 
 // api/ogin route (document this)
-app.post('api/login', async (req, res) => {
+app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
 
     const user = users.find(user => user.username === username);
@@ -128,7 +152,7 @@ function authorizeRole(role) {
 
 // start server
 app.listen(PORT, () => {
-    console.log(`Backend running at http://localhost${PORT}`);
+    console.log(`Backend running at http://localhost:${PORT}`);
     console.log("Try Logging in With: ");
     console.log("Admin: username: admin, password: admin123");
     console.log("User: username: alice, password: user123");

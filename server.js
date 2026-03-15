@@ -58,9 +58,9 @@ if (!users[0].password.includes('$2a$')) {
 
 // Auth routes
 
-// POST/api/register
+// POST/api/register - to be added
 app.post('/api/register', async (req, res) => {
-    const { username, password, role = 'user' } = req.body;
+    const { username, password, Fname, Lname, email, role = 'user' } = req.body;
 
     // check username and password
     if (!username || !password) {
@@ -79,11 +79,18 @@ app.post('/api/register', async (req, res) => {
         id: users.length + 1,
         username,
         password: hashed_password,
-        role
+        role,
+        Fname,  // Save First Name
+        Lname,  // Save Last Name
+        email   // Save Email
     };
     // add user to storage
     users.push(newUser);
-    res.status(201).json({ message: 'user registered' + username, role });
+    res.status(201).json({
+        message: 'User registered: ' + username,
+        email: newUser.email,
+        Fname: newUser.Fname
+    });
 });
 
 // api/ogin route (document this)
@@ -102,7 +109,17 @@ app.post('/api/login', async (req, res) => {
         role: user.role,
     }, SECRET_KEY, { expiresIn: '30s' });
 
-    res.json({ token, user: { username: user.username, role: user.role } });
+    // added email,fname,lname from the frontend - document this
+    res.json({
+        token,
+        user: {
+            username: user.username,
+            role: user.role,
+            Fname: user.Fname,
+            Lname: user.Lname,
+            email: user.email
+        }
+    });
 });
 
 
